@@ -1,0 +1,17 @@
+{% from '_visuals.html' import icon %}
+{% macro favorite_button(trip, compact=false) %}
+{% set active = trip.id in favorite_ids %}
+{% if viewer %}
+<form class="favorite-form {{ 'favorite-overlay' if compact else '' }}" method="post" action="{{ url_for('toggle_favorite', trip_id=trip.id) }}" data-favorite-form>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <input type="hidden" name="action" value="{{ 'remove' if active else 'add' }}">
+  <input type="hidden" name="source" value="{{ request.endpoint }}">
+  <input type="hidden" name="query" value="{{ request.args.get('q','') }}">
+  <button class="secondary favorite-button" type="submit" aria-pressed="{{ 'true' if active else 'false' }}" aria-label="{{ trip.title }}のお気に入り" title="{{ 'お気に入りから外す' if active else 'お気に入りに登録' }}">
+    {{ icon('heart') }}{% if not compact %}<span data-favorite-label>{{ 'お気に入りから外す' if active else 'お気に入りに登録' }}</span>{% endif %}
+  </button>
+</form>
+{% elif compact %}
+<span class="favorite-overlay"><button type="button" class="secondary favorite-button" disabled aria-label="お気に入りは演習用アカウントを選ぶと利用できます" title="演習用アカウントを選ぶと利用できます">{{ icon('heart') }}</button></span>
+{% endif %}
+{% endmacro %}

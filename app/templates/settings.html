@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}個人設定{% endblock %}
+{% block content %}
+<p class="eyebrow">YOUR PROFILE</p><h1>個人設定</h1>
+<p class="lead">演習用プロフィールと、新しく作るしおりの初期設定を変更できます。</p>
+{% if saved %}<p role="status" class="notice">設定を保存しました。</p>{% endif %}
+{% if error %}<p role="alert" class="error">{{ error }}</p>{% endif %}
+<form class="editor" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<label for="name">表示名</label><input id="name" name="name" value="{{ values.name }}" maxlength="30" required>
+<label for="bio">自己紹介</label><textarea id="bio" name="bio" rows="3" maxlength="300" placeholder="好きな旅のスタイルなど。個人情報は入力しないでください。">{{ values.bio }}</textarea>
+<fieldset><legend>新しいしおりの初期公開範囲</legend><label class="choice"><input type="radio" name="default_visibility" value="private" {% if values.default_visibility == 'private' %}checked{% endif %}>自分限定<span>保存してから共有先を決める</span></label><label class="choice"><input type="radio" name="default_visibility" value="public" {% if values.default_visibility == 'public' %}checked{% endif %}>全体公開<span>保存すると全員が閲覧できる</span></label><p class="muted">既存のしおりの公開範囲は変わりません。グループ共有は各しおりで選べます。</p></fieldset>
+<button type="submit">設定を保存する</button></form>
+<p class="muted">この教材には本人認証・メールアドレス・パスワードの設定はありません。</p>
+{% endblock %}

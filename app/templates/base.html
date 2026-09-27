@@ -1,0 +1,35 @@
+{% from '_visuals.html' import icon %}
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}旅のしおり{% endblock %} | 旅行プラン共有</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('search') }}"><span class="brand-mark">{{ icon('book') }}</span>旅のしおり<span class="brand-caption">小さな旅を、集めよう。</span></a>
+    <nav aria-label="メインナビゲーション">
+      <a {% if request.endpoint == 'search' %}aria-current="page"{% endif %} href="{{ url_for('search', _anchor='plans') }}">{{ icon('search') }}公開プランを探す</a>
+      {% if viewer %}<a href="{{ url_for('my_trips') }}">{{ icon('user') }}マイページ</a><a href="{{ url_for('favorites') }}">{{ icon('heart') }}お気に入り</a><a href="{{ url_for('groups') }}">{{ icon('friends') }}グループ</a><a class="button" href="{{ url_for('create_trip') }}">{{ icon('plus') }}しおりを作る</a>{% endif %}
+    </nav>
+  </header>
+  <div class="demo-bar">
+    <form method="post" action="{{ url_for('switch_demo_user') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="demo-user">演習用アカウント</label>
+      <select name="user_id" id="demo-user">
+        <option value="0" {% if not viewer %}selected{% endif %}>ゲスト（閲覧のみ）</option>
+        {% for user in users %}<option value="{{ user.id }}" {% if viewer and viewer.id == user.id %}selected{% endif %}>{{ user.name }}</option>{% endfor %}
+      </select>
+      <button class="secondary" type="submit">切り替える</button>
+    </form>
+    <small>架空の利用者の視点を切り替えます。本人認証ではありません。</small>
+  </div>
+  <main>{% block content %}{% endblock %}</main>
+  <p id="favorite-status" class="favorite-status" role="status" aria-live="polite"></p>
+  <script src="{{ url_for('static', filename='favorites.js') }}" defer></script>
+  <footer><div class="footer-inner"><div><span class="footer-brand">旅のしおり</span><p>行きたい場所も、忘れたくない時間も。</p></div><div class="footer-notes">セキュリティ・キャンプ演習用 · 架空の旅行共有サービス<br>写真はイメージです。</div></div></footer>
+</body>
+</html>

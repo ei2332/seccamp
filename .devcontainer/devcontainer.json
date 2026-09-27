@@ -1,0 +1,39 @@
+{
+  "name": "seccamp-2026-mini-yamanashi",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "vscode",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1.1.3": {
+      "version": "2.101.0"
+    }
+  },
+  "remoteEnv": {
+    "PATH": "/opt/lesson-venv/bin:${containerEnv:PATH}",
+    "VIRTUAL_ENV": "/opt/lesson-venv"
+  },
+  "forwardPorts": [5000],
+  "portsAttributes": {
+    "5000": {
+      "label": "旅のしおり（演習用）",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "python scripts/prepare_environment.py",
+  "waitFor": "postCreateCommand",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "MS-SarifVSCode.sarif-viewer"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/lesson-venv/bin/python",
+        "sarif-viewer.connectToGithubCodeScanning": "off"
+      }
+    }
+  }
+}

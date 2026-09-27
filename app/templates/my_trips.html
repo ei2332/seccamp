@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% from '_cards.html' import cards with context %}
+{% block title %}マイページ{% endblock %}
+{% block content %}
+<p class="eyebrow">MY TRIPS</p><h1>{{ viewer.name }}の旅の記録</h1>
+<p class="lead">自分の旅は、自分のペースで。公開範囲は編集画面から変更できます。</p>
+{% if viewer.bio %}<p class="trip-body">{{ viewer.bio }}</p>{% endif %}
+<div class="profile-links"><a href="{{ url_for('favorites') }}">お気に入りのしおり</a><a href="{{ url_for('settings') }}">個人設定</a></div>
+<h2 class="section-title">自分のプラン</h2>{{ cards(trips, visibilities) }}
+<h2 class="section-title">仲間から共有されたプラン</h2>{{ cards(shared, visibilities) }}
+{% endblock %}

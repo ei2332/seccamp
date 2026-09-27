@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from '_step_form.html' import step_form %}
+{% block title %}{{ 'しおりを編集する' if trip else 'しおりを作る' }}{% endblock %}
+{% block content %}
+<p class="eyebrow">YOUR NEXT JOURNEY</p><h1>{{ 'しおりを編集する' if trip else 'しおりを作る' }}</h1>
+<p class="lead">行きたい場所を並べて、旅の予定を組み立てましょう。</p>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<form class="editor" method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <h2>旅の基本情報</h2>
+  <label for="title">タイトル</label><input id="title" name="title" value="{{ values.title }}" maxlength="100" placeholder="例：山梨で湖とカフェを巡る週末" required>
+  <label for="destination">行き先</label><input id="destination" name="destination" value="{{ values.destination }}" maxlength="100" placeholder="例：山梨・河口湖" required>
+  <label for="body">旅の概要</label><textarea id="body" name="body" rows="3" maxlength="4000" placeholder="どんな旅にしたい？（架空の内容のみ）" required>{{ values.body }}</textarea>
+  <h2 class="section-title">旅のスケジュール</h2>
+  <p class="muted">同じ日の予定を追加できます。保存後は日・時刻の順に並びます。時刻未定の予定は、その日の最後に表示します。</p>
+  <div id="itinerary-fields">{% for step in steps %}{{ step_form(step) }}{% else %}{{ step_form({}) }}{% endfor %}</div>
+  <button class="secondary" type="button" id="add-step">＋ 予定を追加</button>
+  <fieldset><legend>公開範囲</legend>
+    {% for value, label in visibilities.items() %}<label class="choice"><input type="radio" name="visibility" value="{{ value }}" {% if values.visibility == value %}checked{% endif %}>{{ label }}<span>{{ {'public': '誰でも閲覧・検索できる', 'friends': '自分と共有先グループのメンバーだけが閲覧できる', 'private': '自分だけが閲覧できる'}[value] }}</span></label>{% endfor %}
+  </fieldset>
+  <fieldset><legend id="group-label">共有先グループ</legend><p class="muted">参加しているグループから選べます。公開範囲が「グループ限定」の場合だけ反映されます。編集できるのは作成者だけです。</p>
+    <select id="group-id" name="group_id" aria-labelledby="group-label"><option value="">選んでください</option>{% for group in groups %}<option value="{{ group.id }}" {% if values.group_id|string == group.id|string %}selected{% endif %}>{{ group.name }}</option>{% endfor %}</select>
+    {% for group in groups %}<p class="muted">{{ group.name }}：{% for member in group_members[group.id] %}{{ member.name }}{% if not loop.last %}、{% endif %}{% endfor %}</p>{% endfor %}
+    <a href="{{ url_for('groups') }}">グループを作成・参加する</a><p class="muted">グループ画面に移る前に、編集中のしおりを自分限定で保存してください。</p>
+  </fieldset>
+  <div class="form-actions"><button type="submit">しおりを保存する</button><a href="{{ url_for('my_trips') }}">キャンセル</a></div>
+</form>
+<template id="step-template">{{ step_form({}) }}</template>
+<script src="{{ url_for('static', filename='itinerary.js') }}" defer></script>
+{% endblock %}

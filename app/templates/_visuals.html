@@ -1,0 +1,20 @@
+{% macro icon(name) -%}
+<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{% if name == 'search' %}<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>
+{% elif name == 'pin' %}<path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/>
+{% elif name == 'arrow' %}<path d="M4 12h15m-6-6 6 6-6 6"/>
+{% elif name == 'book' %}<path d="M4 4h12a3 3 0 0 1 3 3v14H6a3 3 0 0 1-3-3V5a1 1 0 0 1 1-1Zm0 13h15M7 4v13m4-9h4m-4 4h4"/>
+{% elif name == 'user' %}<circle cx="12" cy="8" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
+{% elif name == 'public' %}<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>
+{% elif name == 'friends' %}<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m1-15a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5"/>
+{% elif name == 'private' %}<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/>
+{% elif name == 'plus' %}<path d="M12 5v14M5 12h14"/>
+{% elif name == 'heart' %}<path d="M20 5a5 5 0 0 0-8 1 5 5 0 0 0-8-1c-4 5 3 11 8 15 5-4 12-10 8-15Z"/>
+{% endif %}</svg>
+{%- endmacro %}
+
+{% macro cover(trip, extra_class='') -%}
+{% set photo = {1: 'kawaguchi', 2: 'reading', 3: 'kyoto', 4: 'camping', 5: 'kawaguchi'}.get(trip.id) %}
+{% if photo %}<img class="trip-photo {{ extra_class }}" src="{{ url_for('static', filename='photos/' ~ photo ~ '.jpg') }}" alt="" loading="lazy" width="900" height="600">
+{% else %}<div class="trip-photo photo-placeholder {{ extra_class }}" aria-hidden="true">{{ icon('book') }}<span>旅のしおり</span></div>{% endif %}
+{%- endmacro %}

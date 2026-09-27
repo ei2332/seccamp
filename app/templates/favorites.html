@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% from '_cards.html' import cards with context %}
+{% block title %}お気に入り{% endblock %}
+{% block content %}
+<p class="eyebrow">SAVED JOURNEYS</p><h1>お気に入りのしおり</h1>
+<p class="lead">気になった旅を、次の休みの楽しみに。現在閲覧できるしおりだけを表示しています。</p>
+{% if trips %}{{ cards(trips, visibilities) }}{% else %}<p class="empty">まだ表示できるお気に入りがありません。しおりの詳細から登録できます。</p>{% endif %}
+{% endblock %}

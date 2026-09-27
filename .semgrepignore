@@ -1,0 +1,3 @@
+# Jinja templates are not supported by the HTML parser used by this ruleset.
+# Python code that generates HTML remains in scope.
+app/templates/

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% from '_visuals.html' import icon %}
+{% block title %}グループ{% endblock %}
+{% block content %}
+<p class="eyebrow">TRAVEL TOGETHER</p><h1>一緒に旅する仲間</h1>
+<p class="lead">グループに参加すると、仲間が共有したしおりを読めます。</p>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<div class="group-grid">
+{% for group in groups %}
+<section class="group-sheet"><h2>{{ icon('friends') }} {{ group.name }}</h2><p class="muted">参加メンバー</p><p>{% for member in members[group.id] %}<span class="member-name">{{ member.name }}</span>{% endfor %}</p>
+{% if viewer.id == group.owner_id %}<details><summary>仲間を招待する</summary><p class="muted">このコードを招待したい相手だけに伝えてください。知っている人はグループに参加できます。外部には公開しないでください。</p><label>招待コード<input readonly value="{{ group.invite_code }}" aria-label="{{ group.name }}の招待コード"></label></details>
+{% else %}<form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action" value="leave"><input type="hidden" name="group_id" value="{{ group.id }}"><p class="muted">退出すると、このグループ限定のしおりは読めなくなります（自分のしおりを除く）。</p><button class="secondary" type="submit">グループを退出する</button></form>{% endif %}
+</section>
+{% else %}<p class="empty">まだ参加しているグループはありません。</p>{% endfor %}
+</div>
+<div class="group-grid">
+<form class="group-sheet" method="post"><h2>グループを作る</h2><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action" value="create"><label for="group-name">グループ名</label><input id="group-name" name="name" maxlength="60" required placeholder="例：週末旅の仲間"><button type="submit">グループを作成</button></form>
+<form class="group-sheet" method="post"><h2>招待コードで参加する</h2><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action" value="join"><label for="invite-code">招待コード</label><input id="invite-code" name="invite_code" required maxlength="100" autocomplete="off"><button type="submit">グループに参加</button></form>
+</div>
+{% endblock %}

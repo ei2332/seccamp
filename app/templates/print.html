@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}印刷用のしおり{% endblock %}
+{% block content %}
+<a href="{{ url_for('trip_detail', trip_id=trip.id) }}">← しおりに戻る</a>
+<section class="detail-sheet">
+  <p class="eyebrow">{{ trip.destination }} · 印刷用のしおり</p>
+  {{ heading_html | safe }}
+  <p class="trip-body">{{ trip.body }}</p>
+  {% for day in steps | groupby('day') %}
+  <h2>{{ day.grouper }}日目</h2>
+  <ol>{% for step in day.list %}<li><strong>{{ step.time or '時刻未定' }} {{ step.title }}</strong>{% if step.place %} · {{ step.place }}{% endif %}{% if step.note %}<p>{{ step.note }}</p>{% endif %}</li>{% endfor %}</ol>
+  {% else %}<p>予定はこれから。決まったら、しおりに追加しましょう。</p>{% endfor %}
+  <p class="muted">ブラウザの印刷機能で、紙やPDFに保存できます。</p>
+</section>
+{% endblock %}

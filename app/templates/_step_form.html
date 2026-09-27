@@ -1,0 +1,8 @@
+{% macro step_form(step) %}
+<div class="step-editor">
+  <div class="step-editor-top"><label>何日目<input type="number" name="step_day" min="1" max="30" value="{{ step.day or 1 }}" required></label><label>時刻（任意）<input type="time" name="step_time" value="{{ step.time or '' }}"></label><button type="button" class="secondary remove-step">この予定を削除</button></div>
+  <label>予定名<input name="step_title" maxlength="100" value="{{ step.title or '' }}" placeholder="例：湖畔のカフェでランチ"></label>
+  <label>場所（任意）<input name="step_place" maxlength="100" value="{{ step.place or '' }}" placeholder="例：湖畔のカフェ"></label>
+  <label>メモ（任意）<textarea name="step_note" rows="2" maxlength="1000" placeholder="集合の目印や、楽しみにしていること">{{ step.note or '' }}</textarea></label>
+</div>
+{% endmacro %}

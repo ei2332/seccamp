@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from '_cards.html' import cards with context %}
+{% from '_visuals.html' import icon %}
+{% block title %}公開プランを探す{% endblock %}
+{% block content %}
+<section class="explore-hero">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="small-rule"></span>旅のしおりを、ひらこう。</p>
+    <h1><span>次の休み、</span><br><span>どこへ行こう。</span></h1>
+    <p class="hero-description">気になっていた街へ。いつもの仲間と。<br>誰かの旅の記録から、次の楽しみを見つけよう。</p>
+    <a class="hero-link" href="#plans">みんなの旅を見てみる {{ icon('arrow') }}</a>
+  </div>
+  <figure class="hero-photo">
+    <img src="{{ url_for('static', filename='photos/kawaguchi.jpg') }}" alt="河口湖の湖面と、その向こうにそびえる富士山" width="1600" height="1067" fetchpriority="high">
+    <figcaption><span>{{ icon('pin') }}山梨・河口湖</span><span>週末は、少し遠くまで。</span></figcaption>
+  </figure>
+</section>
+<section class="explore-section" id="plans" aria-labelledby="plans-heading">
+  <div class="explore-heading"><div><p class="eyebrow">TRAVEL JOURNALS</p><h2 id="plans-heading">みんなの旅のしおり</h2></div><p class="muted">全体公開のプラン・記録を探す</p></div>
+  <form class="search-form" method="get" action="{{ url_for('search') }}#plans">
+    <label class="search-input">{{ icon('search') }}<input aria-label="検索語" name="q" value="{{ query }}" placeholder="タイトルで検索（例：山梨、読書旅）"></label>
+    <button type="submit">検索する {{ icon('arrow') }}</button>
+  </form>
+  {% if error %}<p class="error" role="alert">{{ error }}</p>
+  {% else %}
+  <p class="result-count">{% if query %}「{{ query }}」の検索結果 · {% endif %}<strong>{{ trips | length }}</strong> 件のプラン</p>
+  {{ cards(trips, visibilities) }}
+  {% endif %}
+</section>
+{% endblock %}

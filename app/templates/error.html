@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}ページを表示できません{% endblock %}
+{% block content %}<div class="detail-sheet"><p class="eyebrow">{{ status }}</p><h1>ページを表示できません</h1>
+{% if status == 403 %}<p>記録・編集するには、演習用アカウントを選んでください。</p>{% elif status == 400 %}<p>入力内容を確認し、ページを開き直してから操作してください。</p>{% else %}<p>このプランは存在しないか、現在の利用者には公開されていません。</p>{% endif %}
+<a href="{{ url_for('search') }}">公開プランへ戻る</a></div>{% endblock %}

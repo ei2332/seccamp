@@ -1,0 +1,17 @@
+{% from '_visuals.html' import icon, cover %}
+{% from '_favorite.html' import favorite_button with context %}
+{% macro cards(trips, visibilities) %}
+<div class="trip-grid">
+{% for trip in trips %}
+  <article class="trip-card" data-trip-id="{{ trip.id }}">
+    <div class="card-media"><a class="card-image-link" href="{{ url_for('trip_detail', trip_id=trip.id) }}" tabindex="-1" aria-hidden="true">{{ cover(trip) }}</a><span class="visibility {{ trip.visibility }}">{{ icon(trip.visibility) }}{{ visibilities[trip.visibility] }}</span>{{ favorite_button(trip, true) }}</div>
+    <div class="card-content">
+      <div class="card-top">{{ icon('pin') }}{{ trip.destination }}</div>
+      <h2><a href="{{ url_for('trip_detail', trip_id=trip.id) }}">{{ trip.title }}</a></h2>
+      <p class="trip-body">{{ trip.body }}</p>
+      <a class="detail-link" href="{{ url_for('trip_detail', trip_id=trip.id) }}">しおりを読む {{ icon('arrow') }}</a>
+    </div>
+  </article>
+{% else %}<div class="empty">{{ icon('search') }}<p>該当するプランはありません。</p><p class="muted">別の言葉で探してみましょう。</p></div>{% endfor %}
+</div>
+{% endmacro %}
