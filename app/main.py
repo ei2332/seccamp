@@ -34,9 +34,9 @@ def create_app(test_config=None):
         # 部分一致検索では、入力中の % と _ も通常の文字として扱う。
         term = query.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
         with closing(open_database(app.config["DATABASE"])) as db:
-            sql = f"SELECT id, title, destination, body, visibility FROM trips WHERE visibility = 'public' AND title LIKE '%{term}%' ESCAPE '\\' ORDER BY id"
+            sql = "SELECT id, title, destination, body, visibility FROM trips WHERE visibility = 'public' AND title LIKE ? ESCAPE '\\' ORDER BY id"
             try:
-                trips = db.execute(sql).fetchall()
+                trips = db.execute(sql, (f"%{term}%",)).fetchall()
             except sqlite3.Error:
                 return render_template("search.html", query=query, trips=[], error="検索できませんでした。"), 400
         return render_template("search.html", query=query, trips=trips, error=None)
